@@ -9,6 +9,7 @@
 #pragma once
 
 #include "VirtualKeyCode.hpp"
+#include "VirtualMouseButtonFlags.hpp"
 
 #ifdef _WIN32
 #pragma comment(linker, "/subsystem:windows")
@@ -247,6 +248,10 @@ public:
 
 	//! Platform independent key handling
 	void handleKeyEvent(const vks::VirtualKeyCode virtualKey, const bool isPressed, const uint32_t rawKeyCode);
+	//! Platform independent mouse handling
+	void handleMouseButton(const vks::VirtualMouseButtonFlags& buttonFlags, const glm::vec2& position);
+	void handleMouseMove(const vks::VirtualMouseButtonFlags& buttonFlags, const glm::vec2& position);
+	void handleMouseWheel(const float delta);
 
 	void RequestQuit();
 
@@ -314,12 +319,22 @@ public:
 	// Pure virtual render function (override in derived class)
 	virtual void render() = 0;
 	// Called when view change occurs
-	// Can be overriden in derived class to e.g. update uniform buffers 
+	// Can be overridden in derived class to e.g. update uniform buffers 
 	// Containing view dependant matrices
 	virtual void viewChanged();
 	// Called if a key event occurs
-	// Can be overriden in derived class to do custom key handling
+	// Can be overridden in derived class to do custom key handling
 	virtual void onKeyEvent(const vks::VirtualKeyCode virtualKey, const bool isPressed, const uint32_t rawKeyCode);
+	// Called if a mouse button event occurs
+	// Can be overridden in derived class to do custom handling
+	virtual void onMouseButton(const vks::VirtualMouseButtonFlags& buttonFlags, const glm::vec2& position) {}
+	// Called if a mouse move event occurs
+	// Can be overridden in derived class to do custom handling
+	virtual void onMouseMove(const vks::VirtualMouseButtonFlags& buttonFlags, const glm::vec2& position) {}
+	// Called if a mouse wheel event occurs
+	// Can be overridden in derived class to do custom handling
+	virtual void onMouseWheel(const float delta) {}
+
 	// Called when the window has been resized
 	// Can be overriden in derived class to recreate or rebuild resources attached to the frame buffer / swapchain
 	virtual void windowResized();
